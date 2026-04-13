@@ -40,7 +40,6 @@ function ConfirmPage() {
     try {
       const result = await submitPaymentConfirmation({ data: { name: name.trim(), phone: phone.trim() } });
 
-      // Notifier l'admin si nouveau client
       if (result?.adminWhatsapp) {
         window.open(result.adminWhatsapp, "_blank");
       }
@@ -48,7 +47,8 @@ function ConfirmPage() {
       const status = await checkPaymentStatus({ data: { phone: phone.trim() } });
 
       if (status.found && status.status === "approved") {
-        navigate({ to: "/download", search: { phone: phone.trim(), pending: "" } });
+        navigate({ to: "/download", search: (prev) => ({ ...prev, phone: phone.trim() }) });
+
       } else {
         navigate({ to: "/merci", search: { phone: phone.trim() } });
       }
@@ -126,3 +126,4 @@ function ConfirmPage() {
     </div>
   );
 }
+

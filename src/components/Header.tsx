@@ -31,7 +31,7 @@ export function Header() {
           </nav>
 
           <button 
-            aria-label="Toggle menu" 
+            aria-label="Basculer le menu" 
             aria-expanded={open}
             aria-controls="mobile-menu"
             onClick={() => setOpen(!open)} className="md:hidden text-background">
@@ -55,3 +55,4 @@ export function Header() {
     </>
   );
 }
+
