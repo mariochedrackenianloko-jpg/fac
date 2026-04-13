@@ -2,6 +2,7 @@ import { BookOpen, TrendingUp, Award, ShieldCheck, Sparkles, Package, ChevronDow
 import ebookCover from "@/assets/ebook-cover.jpg";
 import { useEffect, useState } from "react";
 import { getEbookSections } from "@/lib/admin.functions";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const fallbackModules = [
   { title: "Savonnerie Naturelle", desc: "Maîtrisez la fabrication de savons artisanaux avec des ingrédients locaux" },
@@ -15,6 +16,7 @@ const fallbackModules = [
 export function ProductSection({ coverUrl }: { coverUrl?: string | null }) {
   const [sections, setSections] = useState<any[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const { ref, visible } = useScrollAnimation();
 
   useEffect(() => {
     getEbookSections().then(setSections).catch(() => {});
@@ -22,7 +24,7 @@ export function ProductSection({ coverUrl }: { coverUrl?: string | null }) {
 
   const hasSections = sections.length > 0;
   return (
-    <section id="modules" className="py-20 bg-background">
+    <section ref={ref as any} id="modules" className={`py-20 bg-background transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
           {/* Ebook image */}

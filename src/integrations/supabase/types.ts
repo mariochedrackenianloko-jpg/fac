@@ -48,32 +48,44 @@ export type Database = {
           ebook_file_url: string | null
           id: string
           price: string
+          sales_count: number | null
           title: string
           updated_at: string
           wave_payment_link: string
           whatsapp_group_link: string
+          whatsapp_contact: string | null
+          countdown_date: string | null
+          promo_banner: string | null
         }
         Insert: {
           cover_image_url?: string | null
+          countdown_date?: string | null
           description?: string
           ebook_file_url?: string | null
           id?: string
           price?: string
+          promo_banner?: string | null
+          sales_count?: number | null
           title?: string
           updated_at?: string
           wave_payment_link?: string
           whatsapp_group_link?: string
+          whatsapp_contact?: string | null
         }
         Update: {
           cover_image_url?: string | null
+          countdown_date?: string | null
           description?: string
           ebook_file_url?: string | null
           id?: string
           price?: string
+          promo_banner?: string | null
+          sales_count?: number | null
           title?: string
           updated_at?: string
           wave_payment_link?: string
           whatsapp_group_link?: string
+          whatsapp_contact?: string | null
         }
         Relationships: []
       }

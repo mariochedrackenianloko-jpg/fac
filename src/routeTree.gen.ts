@@ -10,8 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PaymentRouteImport } from './routes/payment'
+import { Route as MerciRouteImport } from './routes/merci'
 import { Route as DownloadRouteImport } from './routes/download'
 import { Route as ConfirmRouteImport } from './routes/confirm'
+import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
+import { Route as CgvRouteImport } from './routes/cgv'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminLoginRouteImport } from './routes/admin/login'
@@ -19,6 +22,11 @@ import { Route as AdminLoginRouteImport } from './routes/admin/login'
 const PaymentRoute = PaymentRouteImport.update({
   id: '/payment',
   path: '/payment',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MerciRoute = MerciRouteImport.update({
+  id: '/merci',
+  path: '/merci',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DownloadRoute = DownloadRouteImport.update({
@@ -29,6 +37,16 @@ const DownloadRoute = DownloadRouteImport.update({
 const ConfirmRoute = ConfirmRouteImport.update({
   id: '/confirm',
   path: '/confirm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfidentialiteRoute = ConfidentialiteRouteImport.update({
+  id: '/confidentialite',
+  path: '/confidentialite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CgvRoute = CgvRouteImport.update({
+  id: '/cgv',
+  path: '/cgv',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -49,16 +67,22 @@ const AdminLoginRoute = AdminLoginRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cgv': typeof CgvRoute
+  '/confidentialite': typeof ConfidentialiteRoute
   '/confirm': typeof ConfirmRoute
   '/download': typeof DownloadRoute
+  '/merci': typeof MerciRoute
   '/payment': typeof PaymentRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cgv': typeof CgvRoute
+  '/confidentialite': typeof ConfidentialiteRoute
   '/confirm': typeof ConfirmRoute
   '/download': typeof DownloadRoute
+  '/merci': typeof MerciRoute
   '/payment': typeof PaymentRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin': typeof AdminIndexRoute
@@ -66,8 +90,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cgv': typeof CgvRoute
+  '/confidentialite': typeof ConfidentialiteRoute
   '/confirm': typeof ConfirmRoute
   '/download': typeof DownloadRoute
+  '/merci': typeof MerciRoute
   '/payment': typeof PaymentRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/': typeof AdminIndexRoute
@@ -76,18 +103,33 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/cgv'
+    | '/confidentialite'
     | '/confirm'
     | '/download'
+    | '/merci'
     | '/payment'
     | '/admin/login'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/confirm' | '/download' | '/payment' | '/admin/login' | '/admin'
+  to:
+    | '/'
+    | '/cgv'
+    | '/confidentialite'
+    | '/confirm'
+    | '/download'
+    | '/merci'
+    | '/payment'
+    | '/admin/login'
+    | '/admin'
   id:
     | '__root__'
     | '/'
+    | '/cgv'
+    | '/confidentialite'
     | '/confirm'
     | '/download'
+    | '/merci'
     | '/payment'
     | '/admin/login'
     | '/admin/'
@@ -95,8 +137,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CgvRoute: typeof CgvRoute
+  ConfidentialiteRoute: typeof ConfidentialiteRoute
   ConfirmRoute: typeof ConfirmRoute
   DownloadRoute: typeof DownloadRoute
+  MerciRoute: typeof MerciRoute
   PaymentRoute: typeof PaymentRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminIndexRoute: typeof AdminIndexRoute
@@ -111,6 +156,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PaymentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/merci': {
+      id: '/merci'
+      path: '/merci'
+      fullPath: '/merci'
+      preLoaderRoute: typeof MerciRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/download': {
       id: '/download'
       path: '/download'
@@ -123,6 +175,20 @@ declare module '@tanstack/react-router' {
       path: '/confirm'
       fullPath: '/confirm'
       preLoaderRoute: typeof ConfirmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/confidentialite': {
+      id: '/confidentialite'
+      path: '/confidentialite'
+      fullPath: '/confidentialite'
+      preLoaderRoute: typeof ConfidentialiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cgv': {
+      id: '/cgv'
+      path: '/cgv'
+      fullPath: '/cgv'
+      preLoaderRoute: typeof CgvRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -151,8 +217,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CgvRoute: CgvRoute,
+  ConfidentialiteRoute: ConfidentialiteRoute,
   ConfirmRoute: ConfirmRoute,
   DownloadRoute: DownloadRoute,
+  MerciRoute: MerciRoute,
   PaymentRoute: PaymentRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminIndexRoute: AdminIndexRoute,

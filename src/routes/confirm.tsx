@@ -13,12 +13,16 @@ export const Route = createFileRoute("/confirm")({
       { name: "description", content: "Confirmez votre paiement pour accéder à l'ebook." },
     ],
   }),
+  validateSearch: (search: Record<string, unknown>) => ({
+    phone: (search.phone as string) || "",
+  }),
   component: ConfirmPage,
 });
 
 function ConfirmPage() {
+  const { phone: phoneParam } = Route.useSearch();
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(phoneParam);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -34,17 +38,19 @@ function ConfirmPage() {
 
     setLoading(true);
     try {
-      // Submit confirmation
-      await submitPaymentConfirmation({ data: { name: name.trim(), phone: phone.trim() } });
+      const result = await submitPaymentConfirmation({ data: { name: name.trim(), phone: phone.trim() } });
 
-      // Check if already approved
-      const result = await checkPaymentStatus({ data: { phone: phone.trim() } });
+      // Notifier l'admin si nouveau client
+      if (result?.adminWhatsapp) {
+        window.open(result.adminWhatsapp, "_blank");
+      }
 
-      if (result.found && result.status === "approved") {
+      const status = await checkPaymentStatus({ data: { phone: phone.trim() } });
+
+      if (status.found && status.status === "approved") {
         navigate({ to: "/download", search: { phone: phone.trim(), pending: "" } });
       } else {
-        // Show pending message
-        navigate({ to: "/download", search: { phone: phone.trim(), pending: "true" } });
+        navigate({ to: "/merci", search: { phone: phone.trim() } });
       }
     } catch {
       setError("Une erreur est survenue. Veuillez réessayer.");
@@ -93,6 +99,7 @@ function ConfirmPage() {
                   className="w-full pl-10 pr-4 py-3 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold"
                 />
               </div>
+              <p className="text-xs text-muted-foreground mt-1">Utilisez le même numéro qu'au moment du paiement Wave</p>
             </div>
 
             {error && <p className="text-destructive text-sm">{error}</p>}

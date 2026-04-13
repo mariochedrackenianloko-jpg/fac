@@ -40,11 +40,21 @@ function PaymentPage() {
       setError("Veuillez remplir votre nom et numéro avant de payer.");
       return;
     }
+    const phoneClean = phone.trim().replace(/\s/g, "");
+    if (!/^\+?[0-9]{8,15}$/.test(phoneClean)) {
+      setError("Numéro de téléphone invalide. Ex: +225XXXXXXXXXX");
+      return;
+    }
     setError("");
     setLoading(true);
     try {
-      await submitPaymentConfirmation({ data: { name: name.trim(), phone: phone.trim() } });
+      const result = await submitPaymentConfirmation({ data: { name: name.trim(), phone: phoneClean } });
       setSubmitted(true);
+      // Notifier l'admin via WhatsApp si lien disponible
+      if (result?.adminWhatsapp) {
+        window.open(result.adminWhatsapp, "_blank");
+      }
+      // Ouvrir Wave
       window.open(waveLink, "_blank");
     } catch {
       setError("Une erreur est survenue. Veuillez réessayer.");

@@ -1,13 +1,28 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Star } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
+import { useEffect, useState } from "react";
+import { getProductSettings } from "@/lib/product.functions";
+import { getTestimonials } from "@/lib/admin.functions";
 
 export function HeroSection() {
+  const [salesCount, setSalesCount] = useState(500);
+  const [avgRating, setAvgRating] = useState(4.9);
+
+  useEffect(() => {
+    getProductSettings().then((s) => setSalesCount(s?.sales_count ?? 500)).catch(() => {});
+    getTestimonials().then((data) => {
+      if (data?.length) {
+        const avg = data.reduce((sum: number, t: any) => sum + t.rating, 0) / data.length;
+        setAvgRating(Math.round(avg * 10) / 10);
+      }
+    }).catch(() => {});
+  }, []);
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
       {/* Background */}
       <div className="absolute inset-0">
-        <img src={heroBg} alt="" className="w-full h-full object-cover" width={1920} height={1080} />
+        <img src={heroBg} alt="Fond hero - cosmétiques naturels Afrique" className="w-full h-full object-cover" width={1920} height={1080} loading="lazy" decoding="async" />
         <div className="absolute inset-0 bg-foreground/80" />
       </div>
 
@@ -42,9 +57,9 @@ export function HeroSection() {
             {[...Array(5)].map((_, i) => (
               <Star key={i} className="h-4 w-4 text-gold fill-gold" />
             ))}
-            <span className="ml-2">4.9/5</span>
+            <span className="ml-2">{avgRating}/5</span>
           </div>
-          <span>+500 étudiants formés</span>
+          <span>+{salesCount} étudiants formés</span>
           <span>100% en ligne</span>
         </div>
       </div>

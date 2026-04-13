@@ -4,6 +4,7 @@ import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { CheckCircle, Download, MessageCircle, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { checkPaymentStatus, getProductSettings, getSignedDownloadUrl } from "@/lib/product.functions";
 
 export const Route = createFileRoute("/download")({
@@ -15,18 +16,16 @@ export const Route = createFileRoute("/download")({
   }),
   validateSearch: (search: Record<string, unknown>) => ({
     phone: (search.phone as string) || "",
-    pending: (search.pending as string) || "",
   }),
   component: DownloadPage,
 });
 
 function DownloadPage() {
-  const { phone, pending } = Route.useSearch();
-  const [status, setStatus] = useState<string | null>(pending === "true" ? "pending" : null);
+  const { phone } = Route.useSearch();
+  const [status, setStatus] = useState<string | null>(null);
   const [customerName, setCustomerName] = useState("");
   const [settings, setSettings] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
   const [downloadLoading, setDownloadLoading] = useState(false);
 
   useEffect(() => {
@@ -56,9 +55,13 @@ function DownloadPage() {
     try {
       const result = await getSignedDownloadUrl({ data: { phone } });
       const a = document.createElement("a");
+      const filename = settings?.title ? `${settings.title.replace(/[^a-z0-9]/gi, '_')}_formation_cosmetiques.pdf` : 'formation_arts_cosmetiques.pdf';
       a.href = result.url;
-      a.download = "ebook.pdf";
+      a.download = filename;
+      document.body.appendChild(a);
       a.click();
+      document.body.removeChild(a);
+
     } catch (e) {
       console.error(e);
     }
@@ -146,6 +149,12 @@ function DownloadPage() {
                   Veuillez d'abord effectuer votre paiement puis confirmer votre achat.
                 </p>
               </div>
+              <Link
+                to="/payment"
+                className="inline-flex items-center gap-2 bg-gradient-gold text-foreground font-bold px-6 py-4 rounded-xl hover:opacity-90 transition-opacity"
+              >
+                Acheter l'ebook
+              </Link>
             </>
           )}
         </div>

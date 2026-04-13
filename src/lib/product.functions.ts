@@ -1,5 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { checkIsAdmin } from "@/lib/admin.functions";
 
 export const getProductSettings = createServerFn({ method: "GET" })
   .handler(async () => {
@@ -21,7 +23,6 @@ export const submitPaymentConfirmation = createServerFn({ method: "POST" })
     return { name: input.name.trim(), phone: input.phone.trim() };
   })
   .handler(async ({ data }) => {
-    // Si le client existe déjà, ne pas réinsérer
     const { data: existing } = await supabaseAdmin
       .from("customers")
       .select("id, payment_status")
@@ -37,6 +38,21 @@ export const submitPaymentConfirmation = createServerFn({ method: "POST" })
       .insert({ name: data.name, phone: data.phone, payment_status: "pending" });
 
     if (error) throw new Error("Failed to submit confirmation");
+
+    const { data: settings } = await supabaseAdmin
+      .from("product_settings")
+      .select("whatsapp_contact")
+      .limit(1)
+      .single();
+
+    if (settings?.whatsapp_contact) {
+      const adminPhone = settings.whatsapp_contact.replace(/[^0-9]/g, "");
+      const message = encodeURIComponent(
+        `🔔 Nouveau client en attente !\n\nNom : ${data.name}\nTél : ${data.phone}\n\nConnectez-vous au panel admin pour approuver.`
+      );
+      return { success: true, adminWhatsapp: `https://wa.me/${adminPhone}?text=${message}` };
+    }
+
     return { success: true };
   });
 
@@ -85,15 +101,32 @@ export const getSignedDownloadUrl = createServerFn({ method: "POST" })
 
     if (!settings?.ebook_file_url) throw new Error("No ebook file available");
 
-    // Extract storage path from public URL
     const url = new URL(settings.ebook_file_url);
     const storagePath = url.pathname.split("/object/public/ebook-assets/")[1];
     if (!storagePath) throw new Error("Invalid file URL");
 
     const { data: signed, error } = await supabaseAdmin.storage
       .from("ebook-assets")
-      .createSignedUrl(storagePath, 60 * 10); // 10 minutes
+      .createSignedUrl(storagePath, 60 * 10);
 
     if (error || !signed) throw new Error("Failed to generate download link");
     return { url: signed.signedUrl };
   });
+
+export const deleteProductFile = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { url: string }) => ({ url: input.url.trim() }))
+  .handler(async ({ data }) => {
+    const url = new URL(data.url);
+    const path = url.pathname.split('/object/public/ebook-assets/')[1];
+    if (!path) throw new Error('Invalid file URL');
+
+    const { error } = await supabaseAdmin.storage
+      .from('ebook-assets')
+      .remove([path]);
+
+    if (error) throw new Error(`Delete failed: ${error.message}`);
+    return { success: true };
+  });
+
+
