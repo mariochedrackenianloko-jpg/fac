@@ -3,8 +3,7 @@
   "outputDirectory": "dist/client",
   "functions": {
     "api/index.ts": {
-      "runtime": "nodejs22.x",
-      "maxDuration": 30
+      "runtime": "nodejs22.x"
     }
   }
 }

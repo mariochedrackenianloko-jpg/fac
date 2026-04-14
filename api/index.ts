@@ -1,6 +1,11 @@
-import entryServer from '../src/entry-server.tsx';
+import { createStartHandler } from "@tanstack/react-start/server";
+import { router } from "../src/router";
 
-export default entryServer;
+const handler = createStartHandler({
+  router,
+});
+
+export default handler;
 export const config = {
-  runtime: 'nodejs22.x',
+  runtime: "nodejs22.x",
 };
