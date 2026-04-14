@@ -12,15 +12,17 @@ export default defineConfig({
     tsconfigPaths(),
   ],
   build: {
+    target: 'es2022',
+    sourcemap: true,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom']
-        }
-      }
-    }
+        manualChunks(id: string) {
+          if (id.includes('node_modules')) {
+            return 'vendor'
+          }
+        },
+      },
+    },
   },
-  ssr: {
-    noExternal: ['@tanstack/*']
-  }
 })
+
