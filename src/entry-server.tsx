@@ -1,6 +1,3 @@
-import { createStartHandler } from "@tanstack/react-start/server";
-import { router } from "./router";
+// No server entry needed for SPA
+// Routes handled client-side by TanStack Router
 
-export default createStartHandler({
-  router,
-});

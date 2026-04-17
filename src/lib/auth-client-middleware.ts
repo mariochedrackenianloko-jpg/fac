@@ -1,19 +1,16 @@
-import { createMiddleware } from "@tanstack/react-start";
+// Client auth helpers (no server middleware)
 import { supabase } from "@/integrations/supabase/client";
 
-export const withAuthToken = createMiddleware({ type: "function" })
-  .client(async ({ next }) => {
-    const { data: { session } } = await supabase.auth.getSession();
-    const token = session?.access_token;
-    if (!token) {
-      throw new Error("Not authenticated");
-    }
-    return next({
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  })
-  .server(async ({ next }) => {
-    return next();
-  });
+export async function getAuthToken() {
+  const { data: { session } } = await supabase.auth.getSession();
+  return session?.access_token || null;
+}
+
+export async function requireAuth() {
+  const token = await getAuthToken();
+  if (!token) throw new Error("Not authenticated");
+  return token;
+}
+
+// Use in useEffect or before API calls
+

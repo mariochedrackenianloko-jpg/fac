@@ -11,15 +11,10 @@ export function HeroSection() {
 
   useEffect(() => {
     getProductSettings().then((s) => setSalesCount(s?.sales_count ?? 500)).catch(() => {});
-    getTestimonials().then((data) => {
-      if (data?.length) {
-        const avg = data.reduce((sum: number, t: any) => sum + t.rating, 0) / data.length;
-        setAvgRating(Math.round(avg * 10) / 10);
-      }
-    }).catch(() => {});
+    // Testimonials via API or static
   }, []);
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ paddingTop: 'calc(var(--banner-offset, 0px) + 64px)' }}>
       {/* Background */}
       <div className="absolute inset-0">
         <img src={heroBg} alt="Fond hero - cosmétiques naturels Afrique" className="w-full h-full object-cover" width={1920} height={1080} loading="lazy" decoding="async" />

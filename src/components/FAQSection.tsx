@@ -1,6 +1,6 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useEffect, useState } from "react";
-import { getFaqs } from "@/lib/admin.functions";
+// import { getFaqs } from "@/lib/admin.functions";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const fallbackFaqs = [
@@ -12,12 +12,15 @@ const fallbackFaqs = [
 ];
 
 export function FAQSection() {
-  const [faqs, setFaqs] = useState(fallbackFaqs);
+  const [faqs, setFaqs] = useState([]);
+  useEffect(() => {
+    setFaqs(fallbackFaqs as any);
+  }, []);
   const { ref, visible } = useScrollAnimation();
 
-  useEffect(() => {
-    getFaqs().then((data) => { if (data?.length) setFaqs(data); }).catch(() => {});
-  }, []);
+  // Static fallback (server removed)
+  // No effect needed - static fallback
+
   return (
     <section ref={ref as any} id="faq" className={`py-20 bg-background transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">

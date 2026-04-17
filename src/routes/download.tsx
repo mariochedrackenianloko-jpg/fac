@@ -5,7 +5,7 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { CheckCircle, Download, MessageCircle, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { checkPaymentStatus, getProductSettings, getSignedDownloadUrl } from "@/lib/product.functions";
+import { checkPaymentStatus, getProductSettings } from "@/lib/product.functions";
 
 export const Route = createFileRoute("/download")({
   head: () => ({

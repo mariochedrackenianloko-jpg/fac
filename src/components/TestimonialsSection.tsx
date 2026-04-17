@@ -1,6 +1,6 @@
 import { Star, Quote } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getTestimonials } from "@/lib/admin.functions";
+import { getTestimonials } from "@/lib/testimonials";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const fallbackTestimonials = [
@@ -10,7 +10,10 @@ const fallbackTestimonials = [
 ];
 
 export function TestimonialsSection() {
-  const [testimonials, setTestimonials] = useState(fallbackTestimonials);
+  const [testimonials, setTestimonials] = useState([]);
+  useEffect(() => {
+    setTestimonials(fallbackTestimonials as any);
+  }, []);
   const { ref, visible } = useScrollAnimation();
 
   useEffect(() => {

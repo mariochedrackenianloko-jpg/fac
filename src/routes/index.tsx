@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
-import { lazy, Suspense } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { HeroSection } from "@/components/HeroSection";
 const LazyProductSection = lazy(() => import("@/components/ProductSection").then(module => ({ default: (module as any).ProductSection })));
 const LazyTestimonialsSection = lazy(() => import("@/components/TestimonialsSection").then(module => ({ default: (module as any).TestimonialsSection })));
@@ -26,7 +25,9 @@ function Index() {
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    getProductSettings().then((s) => setCoverUrl(s.cover_image_url)).catch(() => {});
+    getProductSettings().then((s) => {
+      setCoverUrl(s?.cover_image_url || null);
+    }).catch(() => {});
   }, []);
 
   return (
@@ -34,7 +35,7 @@ function Index() {
       <Header />
       <HeroSection />
       <Suspense fallback={<div className="py-20 bg-muted/20"><Skeleton className="h-96 w-full max-w-7xl mx-auto rounded-2xl mx-4" /></div>}>
-        <LazyProductSection coverUrl={coverUrl as any} />
+        <LazyProductSection coverUrl={coverUrl} />
       </Suspense>
       <Suspense fallback={<div className="py-20 bg-muted/20"><Skeleton className="h-80 w-full max-w-4xl mx-auto rounded-xl mx-4" /></div>}>
         <LazyTestimonialsSection />

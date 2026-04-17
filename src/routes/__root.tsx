@@ -57,17 +57,14 @@ export const Route = createRootRoute({
     script: [{
       type: "application/ld+json",
       dangerouslySetInnerHTML: {
-        __html: `{
+        __html: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Product",
           "name": "FAC AFRIQUE – Formation Arts Cosmétiques",
-          "image": "${ebookCover}",
+          "image": ebookCover,
           "description": "Guide complet pour fabriquer et vendre cosmétiques naturels en Afrique. De zéro à business rentable.",
           "sku": "fac-ebook-v1",
-          "brand": {
-            "@type": "Organization",
-            "name": "FAC AFRIQUE"
-          },
+          "brand": { "@type": "Organization", "name": "FAC AFRIQUE" },
           "offers": {
             "@type": "Offer",
             "priceCurrency": "XOF",
@@ -76,13 +73,12 @@ export const Route = createRootRoute({
             "url": "https://fac-afrique.com/payment"
           },
           "category": "Ebook Formation Cosmétiques"
-        }`
+        })
       }
     }],
     links: [
       { rel: "icon", type: "image/jpeg", href: facLogo },
-{ rel: "preload", as: "image", href: facLogo, fetchPriority: "high" },
-
+      { rel: "preload", as: "image", href: facLogo, fetchPriority: "high" },
       { rel: "apple-touch-icon", href: facLogo },
       { rel: "canonical", href: "https://fac-afrique.com/" },
       { rel: "manifest", href: "/manifest.json" },
@@ -102,7 +98,7 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
         <HeadContent />
       </head>

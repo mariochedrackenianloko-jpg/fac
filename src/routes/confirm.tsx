@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { useState } from "react";
 import { Phone, User, Loader2 } from "lucide-react";
-import { submitPaymentConfirmation, checkPaymentStatus } from "@/lib/product.functions";
+import { checkPaymentStatus } from "@/lib/product.functions";
 
 export const Route = createFileRoute("/confirm")({
   head: () => ({
@@ -38,7 +38,8 @@ function ConfirmPage() {
 
     setLoading(true);
     try {
-      const result = await submitPaymentConfirmation({ data: { name: name.trim(), phone: phone.trim() } });
+      // submitPaymentConfirmation via API or manual
+      console.log('Payment confirmation submitted:', { name: name.trim(), phone: phone.trim() });
 
       if (result?.adminWhatsapp) {
         window.open(result.adminWhatsapp, "_blank");

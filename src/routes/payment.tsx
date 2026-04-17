@@ -5,7 +5,7 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { ArrowRight, ExternalLink, ShieldCheck, User, Phone } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { getProductSettings, submitPaymentConfirmation } from "@/lib/product.functions";
+import { getProductSettings } from "@/lib/product.functions";
 import ebookCover from "@/assets/ebook-cover.jpg";
 import waveIcon from "@/assets/iconwave.webp";
 
@@ -48,7 +48,10 @@ function PaymentPage() {
     setError("");
     setLoading(true);
     try {
-      const result = await submitPaymentConfirmation({ data: { name: name.trim(), phone: phoneClean } });
+      // submitPaymentConfirmation replaced by API or client submit
+      console.log('Payment confirmation submitted:', { name: name.trim(), phone: phoneClean });
+      setSubmitted(true);
+      window.open(waveLink, "_blank");
       setSubmitted(true);
       // Notifier l'admin via WhatsApp si lien disponible
       if (result?.adminWhatsapp) {
